@@ -146,7 +146,7 @@ describe('iterator', () => {
       assert.deepEqual(sample, [1, 2, 3, 1, 2, 3, 1, 2, 3, 1]);
     });
   });
-  describe('#forEach()', () => {
+  describe('#forEach(f)', () => {
     it('should execute for each member of the iterator', () => {
       let i = 0;
       const iter = iterator([1, 2, 3]);
@@ -154,7 +154,7 @@ describe('iterator', () => {
       assert.equal(i, 3);
     });
   });
-  describe('#use()', () => {
+  describe('#use(f)', () => {
     it('should not execute before a terminal operation', () => {
       let i = 0;
       const iter = iterator([1, 2, 3]);
