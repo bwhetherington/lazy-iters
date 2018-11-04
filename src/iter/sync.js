@@ -131,9 +131,12 @@ class Iterator {
    * Produces the number of elements in this iterator. This is a terminal operation.
    */
   count() {
-    return this.fold(0, (n, _) => n + 1);
+    return this.map(_ => 1).sum();
   }
 
+  /**
+   * Produces the sum of the elements in this iterator. This is a terminal operation.
+   */
   sum() {
     return this.fold(0, (sum, x) => sum + x);
   }

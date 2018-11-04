@@ -21,7 +21,7 @@ const odds = iterator(list)
 const sumOfSquaredEvens = iterator(list)
   .filter(x => x % 2 == 0)
   .map(x => x * x)
-  .fold(0, (sum, x) => sum + x);
+  .sum();
 ```
 
 In addition, asynchronous iterators are also offered:
@@ -52,6 +52,6 @@ async function doSomething() {
   const sumOfFirst10Evens = await asyncIterator(asyncGenerator())
     .filter(x => x % 2 == 0)
     .take(10)
-    .fold(0, (sum, x) => sum + x);
+    .sum();
 }
 ```
