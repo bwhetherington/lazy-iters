@@ -1,6 +1,6 @@
 {
   "name": "lazy-iters",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A lazy iterator interface for synchronous and asynchronous iterators",
   "main": "src/lib.js",
   "repository": {

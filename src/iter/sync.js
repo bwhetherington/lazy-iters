@@ -135,7 +135,8 @@ class Iterator {
   }
 
   /**
-   * Produces the sum of the elements in this iterator. This is a terminal operation.
+   * Produces the sum of the elements in this iterator. This method should only be used on
+   * iterators of numbers. This is a terminal operation.
    */
   sum() {
     return this.fold(0, (sum, x) => sum + x);
