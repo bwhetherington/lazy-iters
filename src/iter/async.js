@@ -200,6 +200,34 @@ class AsyncIterator {
   loop() {
     return asyncIterator(loop(this.iter));
   }
+
+  /**
+   * Determines whether or not at least one member of the iterator satisfies the specified
+   * predicate. This is a terminal operation.
+   * @param {function} predicate the predicate
+   */
+  async any(predicate) {
+    for await (const x of this.iter) {
+      if (predicate(x)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Determines whether or not all members of the iterator satisfies the specified predicate. This
+   * is a terminal operation.
+   * @param {function} predicate the predicate
+   */
+  async all(predicate) {
+    for await (const x of this.iter) {
+      if (!predicate(x)) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
 
 /**
