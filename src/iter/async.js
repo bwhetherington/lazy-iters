@@ -55,6 +55,20 @@ async function* flatten(iter) {
   }
 }
 
+function* loopArray(arr) {
+  yield* arr;
+  yield* loopArray(arr);
+}
+
+async function* loop(iter) {
+  const yielded = [];
+  for await (const x of iter) {
+    yielded.push(x);
+    yield x;
+  }
+  yield* loopArray(yielded);
+}
+
 class AsyncIterator {
   constructor(iter) {
     this.iter = iter;
@@ -178,6 +192,13 @@ class AsyncIterator {
         .take(1)
         .collect()[0];
     }
+  }
+
+  /**
+   * Produces a new iterator that produces the contents of this iterator looped infinitely.
+   */
+  loop() {
+    return asyncIterator(loop(this.iter));
   }
 }
 

@@ -51,6 +51,15 @@ function* flatten(iter) {
   }
 }
 
+function* loop(iter) {
+  const yielded = [];
+  for (const x of iter) {
+    yielded.push(x);
+    yield x;
+  }
+  yield* loop(yielded);
+}
+
 class Iterator {
   constructor(iter) {
     this.iter = iter;
@@ -174,6 +183,13 @@ class Iterator {
         .take(1)
         .collect()[0];
     }
+  }
+
+  /**
+   * Produces a new iterator that produces the contents of this iterator looped infinitely.
+   */
+  loop() {
+    return iterator(loop(this.iter));
   }
 }
 
