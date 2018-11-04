@@ -152,10 +152,20 @@ class Iterator {
     return this.fold(0, (sum, x) => sum + x);
   }
 
+  /**
+   * Converts an iterator of iterators of a type into an iterator of that type. As an example,
+   * an iterator structured such as `[[1, 2, 3], [4, 5, 6], [7, 8, 9]]` could be converted into
+   * `[1, 2, 3, 4, 5, 6, 7, 8, 9]`.
+   */
   flatten() {
     return iterator(flatten(this.iter));
   }
 
+  /**
+   * Produces the `n`th member of the iterator. If `n` is outside the bounds of the iterator,
+   * `undefined` is returned.
+   * @param {number} n the index to take.
+   */
   nth(n) {
     if (n < 0) {
       return undefined;
