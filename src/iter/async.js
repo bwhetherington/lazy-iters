@@ -43,11 +43,7 @@ async function* use(iter, f) {
 
 async function* flatten(iter) {
   for await (const x of iter) {
-    if (x instanceof Iterator) {
-      for (const y of x.iter) {
-        yield y;
-      }
-    } else if (x instanceof AsyncIterator) {
+    if (x instanceof AsyncIterator) {
       for await (const y of x.iter) {
         yield y;
       }
