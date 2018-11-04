@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "A lazy iterator interface for synchronous and asynchronous iterators",
   "main": "src/lib.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bwhetherington/lazy-iters"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
