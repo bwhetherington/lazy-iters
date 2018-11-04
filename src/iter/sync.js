@@ -133,6 +133,10 @@ class Iterator {
   count() {
     return this.fold(0, (n, _) => n + 1);
   }
+
+  sum() {
+    return this.fold(0, (sum, x) => sum + x);
+  }
 }
 
 /**

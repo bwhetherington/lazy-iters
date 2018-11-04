@@ -2,6 +2,8 @@
 
 The `lazy-iters` package provides a common interface for iterators. It provides common intermediate operations, such as `map` and `filter` which are only evaluated after calling a terminal operation. These same methods are also offered for asynchronous iterators. The only difference is that all terminal operations for asynchronous generators are themselves asynchronous.
 
+This interface was inspired in large part by Rust's `Iterator` trait.
+
 ## Examples
 
 ```javascript

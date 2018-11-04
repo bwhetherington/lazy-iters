@@ -133,6 +133,13 @@ class AsyncIterator {
   async count() {
     return await this.fold(0, (n, _) => n + 1);
   }
+
+  /**
+   * Produces the sum of the elements in this iterator. This is a terminal operation.
+   */
+  async sum() {
+    return await this.fold(0, (sum, x) => sum + x);
+  }
 }
 
 /**
