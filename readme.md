@@ -49,7 +49,8 @@ async function* asyncGenerator() {
 }
 
 async function doSomething() {
-  const sumOfFirst10Evens = await asyncIterator(asyncGenerator())
+  const generator = asyncGenerator();
+  const sumOfFirst10Evens = await asyncIterator(generator)
     .filter(x => x % 2 == 0)
     .take(10)
     .sum();
