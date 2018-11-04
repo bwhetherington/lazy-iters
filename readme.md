@@ -38,7 +38,6 @@ function sleep(ms) {
 /**
  * Generate a number every 1 second.
  */
-
 async function* asyncGenerator() {
   let i = 0;
   while (true) {
