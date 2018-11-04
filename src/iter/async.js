@@ -41,6 +41,24 @@ async function* use(iter, f) {
   }
 }
 
+async function* flatten(iter) {
+  for await (const x of iter) {
+    if (x instanceof Iterator) {
+      for (const y of x.iter) {
+        yield y;
+      }
+    } else if (x instanceof AsyncIterator) {
+      for await (const y of x.iter) {
+        yield y;
+      }
+    } else {
+      for await (const y of x) {
+        yield y;
+      }
+    }
+  }
+}
+
 class AsyncIterator {
   constructor(iter) {
     this.iter = iter;
@@ -140,6 +158,30 @@ class AsyncIterator {
    */
   async sum() {
     return await this.fold(0, (sum, x) => sum + x);
+  }
+
+  /**
+   * Converts an iterator of iterators of a type into an iterator of that type. As an example,
+   * an iterator structured such as `[[1, 2, 3], [4, 5, 6], [7, 8, 9]]` could be converted into
+   * `[1, 2, 3, 4, 5, 6, 7, 8, 9]`.
+   */
+  flatten() {
+    return asyncIterator(flatten(this.iter));
+  }
+
+  /**
+   * Produces the `n`th member of the iterator. If `n` is outside the bounds of the iterator,
+   * `undefined` is returned.
+   * @param {number} n the index to take.
+   */
+  async nth(n) {
+    if (n < 0) {
+      return undefined;
+    } else {
+      return await this.skip(n)
+        .take(1)
+        .collect()[0];
+    }
   }
 }
 

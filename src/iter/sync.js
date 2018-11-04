@@ -13,8 +13,8 @@ function* take(iter, n) {
 function* skip(iter, n) {
   let i = 0;
   for (const x of iter) {
-    if (i >= n) {
-      i++;
+    i++;
+    if (i > n) {
       yield x;
     }
   }
@@ -38,6 +38,16 @@ function* use(iter, f) {
   for (const x of iter) {
     f(x);
     yield x;
+  }
+}
+
+function* flatten(iter) {
+  for (const x of iter) {
+    if (x instanceof Iterator) {
+      yield* x.iter;
+    } else {
+      yield* x;
+    }
   }
 }
 
@@ -140,6 +150,20 @@ class Iterator {
    */
   sum() {
     return this.fold(0, (sum, x) => sum + x);
+  }
+
+  flatten() {
+    return iterator(flatten(this.iter));
+  }
+
+  nth(n) {
+    if (n < 0) {
+      return undefined;
+    } else {
+      return this.skip(n)
+        .take(1)
+        .collect()[0];
+    }
   }
 }
 
