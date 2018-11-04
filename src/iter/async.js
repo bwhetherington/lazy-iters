@@ -1,3 +1,15 @@
+async function* take(iter, n) {
+  let i = 0;
+  for await (const x of iter) {
+    if (i < n) {
+      i++;
+      yield x;
+    } else {
+      break;
+    }
+  }
+}
+
 async function* skip(iter, n) {
   let i = 0;
   for await (const x of iter) {
@@ -44,22 +56,11 @@ class AsyncIterator {
   }
 
   /**
-   * Collects the first `n` members of the iterator into a list. If the iterator does not yield
-   * `n` or more members, all members are collected. This is a terminal operator.
-   * @param {number} n the number of members to collect
+   * Produces a new iterator that yields the first `n` members of this iterator before terminating.
+   * @param {number} n the number of members to yield
    */
-  async take(n) {
-    const collected = [];
-    let i = 0;
-    for await (const x of this.iter) {
-      if (i < n) {
-        i++;
-        collected.push(x);
-      } else {
-        break;
-      }
-    }
-    return collected;
+  take(n) {
+    return asyncIterator(take(this.iter, n));
   }
 
   /**
