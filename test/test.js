@@ -49,9 +49,9 @@ describe('iterator', () => {
       assert.equal(iter.any(_ => true), false);
     });
     it('should test all elements', () => {
-      const iter = iterator([2, 4, 6, 7]);
+      const iter = iterator([2, 4, 6]);
       const test = iter.any(x => x % 2 != 0);
-      assert.equal(test, true);
+      assert.equal(test, false);
     });
     it('should short circuit', () => {
       let numTested = 0;
@@ -70,9 +70,8 @@ describe('iterator', () => {
       assert.equal(iter.all(_ => false), true);
     });
     it('should test all elements', () => {
-      const iter = iterator([2, 4, 6, 7]);
-      assert.equal(iter.all(x => x % 2 == 0), false);
-      assert.equal(iter.all(x => x > 1), true);
+      const iter = iterator([2, 4, 6]);
+      assert.equal(iter.all(x => x % 2 == 0), true);
     });
     it('should short circuit', () => {
       let numTested = 0;
@@ -85,12 +84,88 @@ describe('iterator', () => {
       assert.equal(numTested, 2);
     });
   });
+  describe('#map(f)', () => {
+    it('should map a function to each element of the iterator', () => {
+      const iter = iterator([1, 2, 3, 4, 5]);
+      const mapped = iter.map(x => x * x).collect();
+      assert.deepEqual(mapped, [1, 4, 9, 16, 25]);
+    });
+  });
+  describe('#filter(predicate)', () => {
+    it('should filter elements of the iterator', () => {
+      const iter = iterator([1, 2, 3, 4, 5]);
+      const filtered = iter.filter(x => x % 2 == 0).collect();
+      assert.deepEqual(filtered, [2, 4]);
+    });
+  });
+  describe('#fold(init, reducer)', () => {
+    it('should fold right across the iterator', () => {
+      const iter = iterator([1, 2, 3]);
+      const folded = iter.fold(0, (sum, x) => sum + x);
+      assert.deepEqual(folded, 6);
+    });
+  });
+  describe('#sum()', () => {
+    it('should return 0 if no elements are yielded', () => {
+      const iter = iterator([]);
+      const sum = iter.sum();
+      assert.equal(sum, 0);
+    });
+    it('should add elements of the iterator', () => {
+      const iter = iterator([1, 2, 3]);
+      const sum = iter.sum();
+      assert.equal(sum, 6);
+    });
+  });
+  describe('#count()', () => {
+    it('should count elements in the iterator', () => {
+      const iter = iterator([1, 2, 3]);
+      const count = iter.count();
+      assert.equal(count, 3);
+    });
+  });
+  describe('#flatten()', () => {
+    it('should flatten inner iterators', () => {
+      const iter = iterator([[1, 2, 3], [4, 5, 6]]);
+      const flattened = iter.flatten().collect();
+      assert.deepEqual(flattened, [1, 2, 3, 4, 5, 6]);
+    });
+    it('should flatten inner lazy iterators', () => {
+      const iter1 = iterator([1, 2, 3]);
+      const iter2 = iterator([4, 5, 6]);
+      const iter = iterator([iter1, iter2]);
+      const flattened = iter.flatten().collect();
+      assert.deepEqual(flattened, [1, 2, 3, 4, 5, 6]);
+    });
+  });
   describe('#loop()', () => {
     it('should repeat elements', () => {
       const iter = iterator([1, 2, 3]);
       const looped = iter.loop();
       const sample = looped.take(10).collect();
       assert.deepEqual(sample, [1, 2, 3, 1, 2, 3, 1, 2, 3, 1]);
+    });
+  });
+  describe('#forEach()', () => {
+    it('should execute for each member of the iterator', () => {
+      let i = 0;
+      const iter = iterator([1, 2, 3]);
+      iter.forEach(_ => i++);
+      assert.equal(i, 3);
+    });
+  });
+  describe('#use()', () => {
+    it('should not execute before a terminal operation', () => {
+      let i = 0;
+      const iter = iterator([1, 2, 3]);
+      iter.use(_ => i++);
+      assert.equal(i, 0);
+    });
+    it('should execute after a terminal operation', () => {
+      let i = 0;
+      const iter = iterator([1, 2, 3]);
+      iter.use(_ => i++).collect();
+      assert.equal(i, 3);
     });
   });
 });
