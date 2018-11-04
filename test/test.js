@@ -43,7 +43,7 @@ describe('iterator', () => {
       assert.deepEqual(sample, [3, 4, 5]);
     });
   });
-  describe('#any()', () => {
+  describe('#any(predicate)', () => {
     it('should return false for an empty iterator', () => {
       const iter = iterator([]);
       assert.equal(iter.any(_ => true), false);
@@ -64,7 +64,7 @@ describe('iterator', () => {
       assert.equal(numTested, 2);
     });
   });
-  describe('#all()', () => {
+  describe('#all(predicate)', () => {
     it('should return true for an empty iterator', () => {
       const iter = iterator([]);
       assert.equal(iter.all(_ => false), true);
