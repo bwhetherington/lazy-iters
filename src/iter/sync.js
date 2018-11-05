@@ -73,6 +73,18 @@ function* flatMap(iter, f) {
   }
 }
 
+function* zip(iterA, iterB) {
+  while (true) {
+    const a = iterA.next();
+    const b = iterB.next();
+    if (a !== undefined && b !== undefined) {
+      yield [a.value, b.value];
+    } else {
+      break;
+    }
+  }
+}
+
 /**
  * @constructor produces an `Iterator` wrapping the specified iterator
  * @param {iterator} iter the wrapped iterator
@@ -248,6 +260,33 @@ class Iterator {
       }
     }
     return true;
+  }
+
+  /**
+   * Produces a new iterator that yields pairs of elements yielded by each iterators which are
+   * stepped in parallel.
+   * @param {iterator} iter the other iterator
+   */
+  zip(iter) {
+    if (iter instanceof Iterator) {
+      return iterator(zip(this.iter, iter.iter));
+    } else {
+      return iterator(zip(this.iter, iter));
+    }
+  }
+
+  /**
+   * Produces a new iterator that maps the specified functions over pairs of values yielded
+   * simultaneously by this iterator and the specified other iterator.
+   * @param {iterator} iter the other iterator
+   * @param {function} f the transforming function
+   */
+  zipWith(iter, f) {
+    return this.zip(iter).map(([a, b]) => f(a, b));
+  }
+
+  iterator() {
+    return this.iter;
   }
 }
 

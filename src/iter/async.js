@@ -77,6 +77,18 @@ async function* flatMap(iter, f) {
   }
 }
 
+async function* zip(iterA, iterB) {
+  while (true) {
+    const a = await iterA.next();
+    const b = await iterB.next();
+    if (a !== undefined && b !== undefined) {
+      yield [a.value, b.value];
+    } else {
+      break;
+    }
+  }
+}
+
 class AsyncIterator {
   constructor(iter) {
     if (typeof iter == 'function' && iter.length == 0) {
@@ -248,6 +260,36 @@ class AsyncIterator {
       }
     }
     return true;
+  }
+
+  /**
+   * Produces a new iterator that yields pairs of elements yielded by each iterators which are
+   * stepped in parallel.
+   * @param {iterator} iter the other iterator
+   */
+  zip(iter) {
+    if (iter instanceof AsyncIterator) {
+      return asyncIterator(zip(this.iter, iter.iter));
+    } else {
+      return asyncIterator(zip(this.iter, iter));
+    }
+  }
+
+  /**
+   * Produces a new iterator that maps the specified functions over pairs of values yielded
+   * simultaneously by this iterator and the specified other iterator.
+   * @param {iterator} iter the other iterator
+   * @param {function} f the transforming function
+   */
+  zipWith(iter, f) {
+    return this.zip(iter).map(([a, b]) => f(a, b));
+  }
+
+  /**
+   * Produces the iterator wrapped by this iterator.
+   */
+  iterator() {
+    return this.iter;
   }
 }
 
