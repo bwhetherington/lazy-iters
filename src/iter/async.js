@@ -66,9 +66,24 @@ async function* loop(iter) {
   }
 }
 
+async function* flatMap(iter, f) {
+  for await (const x of iter) {
+    const innerIter = f(iter);
+    if (innerIter instanceof AsyncIterator) {
+      yield* innerIter.iter;
+    } else {
+      yield* innerIter;
+    }
+  }
+}
+
 class AsyncIterator {
   constructor(iter) {
-    this.iter = iter;
+    if (typeof iter == 'function' && iter.length == 0) {
+      this.iter = iter();
+    } else {
+      this.iter = iter;
+    }
   }
 
   /**
@@ -104,6 +119,15 @@ class AsyncIterator {
    */
   map(f) {
     return asyncIterator(map(this.iter, f));
+  }
+
+  /**
+   * Produces a new iterator where the specified function is executed on each member of the
+   * iterator, transforming each member into an iterator that is then flattened.
+   * @param {function} f the function to execute on each member
+   */
+  flatMap(f) {
+    return asyncIterator(flatMap(this.iter, f));
   }
 
   /**

@@ -62,13 +62,28 @@ function* loop(iter) {
   }
 }
 
+function* flatMap(iter, f) {
+  for (const x of iter) {
+    const innerIter = f(x);
+    if (innerIter instanceof Iterator) {
+      yield* innerIter.iter;
+    } else {
+      yield* innerIter;
+    }
+  }
+}
+
 /**
  * @constructor produces an `Iterator` wrapping the specified iterator
  * @param {iterator} iter the wrapped iterator
  */
 class Iterator {
   constructor(iter) {
-    this.iter = iter;
+    if (typeof iter == 'function' && iter.length == 0) {
+      this.iter = iter();
+    } else {
+      this.iter = iter;
+    }
   }
 
   /**
@@ -104,6 +119,15 @@ class Iterator {
    */
   map(f) {
     return iterator(map(this.iter, f));
+  }
+
+  /**
+   * Produces a new iterator where the specified function is executed on each member of the
+   * iterator, transforming each member into an iterator that is then flattened.
+   * @param {function} f the function to execute on each member
+   */
+  flatMap(f) {
+    return iterator(flatMap(this.iter, f));
   }
 
   /**
