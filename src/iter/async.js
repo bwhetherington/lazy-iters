@@ -55,18 +55,15 @@ async function* flatten(iter) {
   }
 }
 
-function* loopArray(arr) {
-  yield* arr;
-  yield* loopArray(arr);
-}
-
 async function* loop(iter) {
   const yielded = [];
   for await (const x of iter) {
     yielded.push(x);
     yield x;
   }
-  yield* loopArray(yielded);
+  while (true) {
+    yield* yielded;
+  }
 }
 
 class AsyncIterator {

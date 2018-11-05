@@ -57,9 +57,15 @@ function* loop(iter) {
     yielded.push(x);
     yield x;
   }
-  yield* loop(yielded);
+  while (true) {
+    yield* yielded;
+  }
 }
 
+/**
+ * @constructor produces an `Iterator` wrapping the specified iterator
+ * @param {iterator} iter the wrapped iterator
+ */
 class Iterator {
   constructor(iter) {
     this.iter = iter;
