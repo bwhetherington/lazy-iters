@@ -291,6 +291,17 @@ class AsyncIterator {
   iterator() {
     return this.iter;
   }
+
+  /**
+   * Produces the first element of this iterator, or `undefined` if it yields nothing. This is a
+   * terminal operation.
+   */
+  async first() {
+    for await (const x of this.iter) {
+      return x;
+    }
+    return undefined;
+  }
 }
 
 /**
