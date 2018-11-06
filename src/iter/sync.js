@@ -285,8 +285,22 @@ class Iterator {
     return this.zip(iter).map(([a, b]) => f(a, b));
   }
 
+  /**
+   * Produces the iterator wrapped by this iterator.
+   */
   iterator() {
     return this.iter;
+  }
+
+  /**
+   * Produces the first element of this iterator, or `undefined` if it yields nothing. This is a
+   * terminal operation.
+   */
+  first() {
+    for (const x of this.iter) {
+      return x;
+    }
+    return undefined;
   }
 }
 
