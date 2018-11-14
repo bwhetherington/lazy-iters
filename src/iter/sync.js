@@ -1,3 +1,7 @@
+function isIterator(obj) {
+  return obj != null && typeof obj[Symbol.iterator] === 'function';
+}
+
 function* take(iter, n) {
   let i = 0;
   for (const x of iter) {
@@ -91,10 +95,10 @@ function* zip(iterA, iterB) {
  */
 class Iterator {
   constructor(iter) {
-    if (typeof iter == 'function' && iter.length == 0) {
-      this.iter = iter();
-    } else {
+    if (isIterator(iter)) {
       this.iter = iter;
+    } else {
+      throw new Error(`${iter} is not an iterator`);
     }
   }
 

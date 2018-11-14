@@ -1,3 +1,7 @@
+function isAsyncIterator(obj) {
+  return obj != null && typeof obj[Symbol.asyncIterator] === 'function';
+}
+
 async function* take(iter, n) {
   let i = 0;
   for await (const x of iter) {
@@ -91,10 +95,10 @@ async function* zip(iterA, iterB) {
 
 class AsyncIterator {
   constructor(iter) {
-    if (typeof iter == 'function' && iter.length == 0) {
-      this.iter = iter();
-    } else {
+    if (isAsyncIterator(iter)) {
       this.iter = iter;
+    } else {
+      throw new Error(`${iter} is not an async iterator`);
     }
   }
 
