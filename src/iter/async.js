@@ -93,6 +93,15 @@ async function* zip(iterA, iterB) {
   }
 }
 
+async function* intersperse(iter, delim) {
+  let first = true;
+  for await (const x of iter) {
+    if (!first) yield delim;
+    first = false;
+    yield x;
+  }
+}
+
 class AsyncIterator {
   constructor(iter) {
     if (isAsyncIterator(iter)) {
@@ -305,6 +314,14 @@ class AsyncIterator {
       return x;
     }
     return undefined;
+  }
+
+  /**
+   * Intersperses elements of the iterator with the specified delimiter.
+   * @param {any} delim the interspersing delimiter
+   */
+  intersperse(delim) {
+    return asyncIterator(intersperse(this.iter, delim));
   }
 }
 

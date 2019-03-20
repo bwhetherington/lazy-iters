@@ -89,6 +89,15 @@ function* zip(iterA, iterB) {
   }
 }
 
+function* intersperse(iter, delim) {
+  let first = true;
+  for (const x of iter) {
+    if (!first) yield delim;
+    first = false;
+    yield x;
+  }
+}
+
 /**
  * @constructor produces an `Iterator` wrapping the specified iterator
  * @param {iterator} iter the wrapped iterator
@@ -305,6 +314,14 @@ class Iterator {
       return x;
     }
     return undefined;
+  }
+
+  /**
+   * Intersperses elements of the iterator with the specified delimiter.
+   * @param {any} delim the interspersing delimiter
+   */
+  intersperse(delim) {
+    return iterator(intersperse(this.iter, delim));
   }
 }
 
