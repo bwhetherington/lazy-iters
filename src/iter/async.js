@@ -102,6 +102,14 @@ async function* intersperse(iter, delim) {
   }
 }
 
+async function* enumerate(iter) {
+  let n = 0;
+  for await (const x of iter) {
+    yield [x, n];
+    n++;
+  }
+}
+
 class AsyncIterator {
   constructor(iter) {
     if (isAsyncIterator(iter)) {
@@ -322,6 +330,15 @@ class AsyncIterator {
    */
   intersperse(delim) {
     return asyncIterator(intersperse(this.iter, delim));
+  }
+
+  /**
+   * Produces an iterator where each element consists of a list of size 2. The
+   * first element of the list is the corresponding element of the initial
+   * iterator, and the second element of the list is the index of the element.
+   */
+  enumerate() {
+    return asyncIterator(enumerate(this.iter));
   }
 }
 

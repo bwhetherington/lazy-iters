@@ -98,6 +98,14 @@ function* intersperse(iter, delim) {
   }
 }
 
+function* enumerate(iter) {
+  let n = 0;
+  for (const x of iter) {
+    yield [x, n];
+    n++;
+  }
+}
+
 /**
  * @constructor produces an `Iterator` wrapping the specified iterator
  * @param {iterator} iter the wrapped iterator
@@ -322,6 +330,15 @@ class Iterator {
    */
   intersperse(delim) {
     return iterator(intersperse(this.iter, delim));
+  }
+
+  /**
+   * Produces an iterator where each element consists of a list of size 2. The
+   * first element of the list is the corresponding element of the initial
+   * iterator, and the second element of the list is the index of the element.
+   */
+  enumerate() {
+    return iterator(enumerate(this.iter));
   }
 }
 
