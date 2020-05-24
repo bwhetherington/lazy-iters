@@ -213,7 +213,7 @@ class AsyncIterator {
    * Produces the number of elements in this iterator. This is a terminal operation.
    */
   async count() {
-    return await this.map(_ => 1).sum();
+    return await this.map((_) => 1).sum();
   }
 
   /**
@@ -242,9 +242,7 @@ class AsyncIterator {
     if (n < 0) {
       return undefined;
     } else {
-      return await this.skip(n)
-        .take(1)
-        .collect()[0];
+      return await this.skip(n).take(1).collect()[0];
     }
   }
 
@@ -339,6 +337,10 @@ class AsyncIterator {
    */
   enumerate() {
     return asyncIterator(enumerate(this.iter));
+  }
+
+  [Symbol.asyncIterator]() {
+    return this.iter;
   }
 }
 

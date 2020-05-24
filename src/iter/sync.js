@@ -213,7 +213,7 @@ class Iterator {
    * Produces the number of elements in this iterator. This is a terminal operation.
    */
   count() {
-    return this.map(_ => 1).sum();
+    return this.map((_) => 1).sum();
   }
 
   /**
@@ -242,9 +242,7 @@ class Iterator {
     if (n < 0) {
       return undefined;
     } else {
-      return this.skip(n)
-        .take(1)
-        .collect()[0];
+      return this.skip(n).take(1).collect()[0];
     }
   }
 
@@ -339,6 +337,10 @@ class Iterator {
    */
   enumerate() {
     return iterator(enumerate(this.iter));
+  }
+
+  [Symbol.iterator]() {
+    return this.iter;
   }
 }
 
